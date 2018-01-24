@@ -1,9 +1,8 @@
 use std::fmt;
 use std::fmt::{Display, Formatter};
 use uuid::Uuid;
-use serde::{Serialize, Serializer};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserId(Uuid);
 
 impl UserId {
@@ -27,13 +26,3 @@ impl Display for UserId {
     }
 }
 
-impl Serialize for UserId {
-    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let &UserId(ref inner) = self;
-        if serializer.is_human_readable() {
-            serializer.collect_str(&inner.hyphenated())
-        } else {
-            serializer.serialize_bytes(inner.as_bytes())
-        }
-    }
-}
